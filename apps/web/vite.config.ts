@@ -17,6 +17,9 @@ export default defineConfig({
         runes: ({ filename }) => (filename.split(/[/\\]/).includes('node_modules') ? undefined : true),
       },
       adapter: adapter(),
+      // All CSS together is about 20 KB before compression; written into the page it costs no extra round trip
+      // before the first paint, which on a slow phone connection is most of the wait.
+      inlineStyleThreshold: 32768,
       prerender: {
         // Short links and feeds are answered by static/_redirects and the lab feed Worker, not by a page here.
         handleHttpError: ({ path, message }) => {
