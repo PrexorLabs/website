@@ -47,7 +47,9 @@ jobs:
 
       # Performance at 0.95 rather than 1 because shared runners vary between runs. Largest contentful paint may
       # take up to 2 s under Lighthouse's throttled phone profile (slow 4G); Google counts up to 2.5 s as good.
-      # The weight budget of 100 KB and the other three categories are strict.
+      # The weight budget of 100 KB and the other three categories are strict. The pages are served from a plain
+      # file server without the Worker, so the browser's request to /api/lab fails; the console error audit is
+      # skipped for that reason only.
       - name: Lighthouse
         run: pnpm dlx @lhci/cli@0.15.1 autorun
 
