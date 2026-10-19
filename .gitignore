@@ -1,0 +1,16 @@
+# node
+node_modules/
+.svelte-kit/
+
+# cloudflare, local state of wrangler dev
+.wrangler/
+.dev.vars
+
+# paraglide, compiled from apps/web/messages
+apps/web/src/lib/paraglide/
+apps/web/project.inlang/cache/
+
+# editors
+.idea/
+.vscode/
+*.DS_Store

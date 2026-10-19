@@ -1,0 +1,7 @@
+pnpm-lock.yaml
+docs/adr/
+packages/tokens/tokens.css
+apps/web/.svelte-kit/
+apps/web/.wrangler/
+apps/web/src/lib/paraglide/
+apps/web/project.inlang/cache/

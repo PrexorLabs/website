@@ -1,0 +1,42 @@
+/* Generated from tokens.json by generate.mjs. Do not edit. */
+:root {
+  --color-background: #07080a;
+  --color-surface-1: #0e1013;
+  --color-surface-2: #14171c;
+  --color-surface-3: #1b1f26;
+  --color-surface-4: #262b33;
+  --color-line: #1b1f26;
+  --color-line-strong: #262b33;
+  --color-text: #edeef0;
+  --color-text-muted: #a3a9b3;
+  --color-text-faint: #8a909b;
+  --color-text-disabled: #5b616c;
+  --color-accent: #d9ff3f;
+  --color-accent-hover: #e3ff6b;
+  --color-accent-2: #22d3ee;
+  --color-on-accent: #0a0b07;
+  --color-good: #5fd98a;
+  --color-warn: #f5b94a;
+  --color-bad: #ff7b7b;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --radius-small: 4px;
+  --radius-medium: 8px;
+  --radius-large: 12px;
+  --radius-x-large: 16px;
+  --font-size-small: 12px;
+  --font-size-label: 13px;
+  --font-size-body: 14px;
+  --font-size-heading: 15px;
+  --font-size-title: 20px;
+  --font-size-display: 44px;
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-slow: 320ms;
+  --font-sans: 'Geist', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+}
