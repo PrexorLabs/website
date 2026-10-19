@@ -30,7 +30,8 @@
     box-sizing: border-box;
     max-width: 1240px;
     margin: 0 auto;
-    padding: var(--space-6) var(--space-5) 40px;
+    /* Room for the hotbar, which floats over the bottom of the screen. */
+    padding: var(--space-6) var(--space-5) 112px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -80,12 +81,5 @@
 
   nav a:hover {
     color: var(--color-text);
-  }
-
-  /* Room for the tab bar, which covers the bottom of the screen on a phone. */
-  @media (max-width: 720px) {
-    .bar {
-      padding-bottom: 96px;
-    }
   }
 </style>

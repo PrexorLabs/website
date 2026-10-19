@@ -114,13 +114,21 @@
     color: var(--color-text-faint);
   }
 
+  /* Like the game's hotbar: it floats at the bottom of the screen and stays there while the page scrolls. */
   .hotbar {
+    position: fixed;
+    left: 50%;
+    bottom: var(--space-4);
+    z-index: 20;
+    translate: -50% 0;
     display: flex;
     gap: var(--space-1);
-    padding: var(--space-1);
-    border-radius: var(--radius-large);
-    background: var(--color-surface-1);
-    box-shadow: inset 0 0 0 1px var(--color-line);
+    padding: 6px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--color-surface-1) 94%, transparent);
+    box-shadow:
+      inset 0 0 0 1px var(--color-line),
+      0 20px 40px -12px #000;
   }
 
   .slot {
@@ -166,7 +174,7 @@
 
   .name {
     position: absolute;
-    top: calc(100% + 8px);
+    bottom: calc(100% + 8px);
     left: 50%;
     z-index: 10;
     translate: -50% 0;
@@ -222,10 +230,10 @@
     }
 
     .hotbar {
-      position: fixed;
       left: 0;
       right: 0;
       bottom: 0;
+      translate: none;
       z-index: 20;
       padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
       border-radius: 0;
