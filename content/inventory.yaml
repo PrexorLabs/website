@@ -12,11 +12,11 @@
     en: Experiment 001 · in review on Modrinth
     de: Experiment 001 · in Prüfung bei Modrinth
   description:
-    en: A Fabric mod that makes the multiplayer list searchable, groups your servers and keeps them in order.
-    de: Ein Fabric-Mod, der die Serverliste durchsuchbar macht, in Gruppen ordnet und aufgeräumt hält.
+    en: A mod for Fabric and NeoForge that makes the multiplayer list searchable, groups your servers and keeps them in order.
+    de: Ein Mod für Fabric und NeoForge, der die Serverliste durchsuchbar macht, in Gruppen ordnet und aufgeräumt hält.
   stats:
     - label: { en: type, de: Art }
-      value: { en: Fabric mod, client side, de: Fabric-Mod, Client }
+      value: { en: Fabric and NeoForge, client side, de: Fabric und NeoForge, Client }
     - label: { en: version, de: Version }
       feed: version
     - label: { en: downloads, de: Downloads }
