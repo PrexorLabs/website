@@ -9,7 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Start page laid out as a Minecraft inventory: items with tooltips, an inspector for the chosen item (a sheet on
   phones), a crafting recipe with donations as the middle ingredient and the latest entries from the lab.
-- Header with the hotbar as main menu, number keys 1 to 6 as shortcuts, and a tab bar on phones.
+- The hotbar as main menu, floating at the bottom of the screen like in the game, with number keys 1 to 6 as
+  shortcuts and a tab bar on phones.
 - Inventory items are kept in `content/inventory.yaml`; locked experiments show without a name.
 - Placeholder pages for the projects, lab, donate and legal pages.
 - Short links `/discord`, `/github` and `/modrinth`.
