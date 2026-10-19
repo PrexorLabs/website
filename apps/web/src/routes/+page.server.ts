@@ -6,7 +6,7 @@ export const load = () => {
     namespace: 'prexorlabs:home',
     inventory,
     projects: Object.fromEntries(inventory.map((item) => [item.id, item.name])),
-    // Filled from the lab feed once it runs (milestone M3).
+    // Stays empty until the lab feed Worker exists.
     events: [],
   };
 };

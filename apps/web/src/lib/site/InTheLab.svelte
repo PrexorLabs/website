@@ -1,4 +1,4 @@
-<!-- Stands in for the pages that are built later (milestone M5), so every link in the hotbar already leads somewhere. -->
+<!-- Stands in for pages that are not written yet, so every link in the hotbar already leads somewhere. -->
 <script lang="ts">
   import Button from '#lib/ui/Button.svelte';
   import { m } from '#lib/paraglide/messages.js';
