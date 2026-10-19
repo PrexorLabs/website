@@ -4,4 +4,6 @@ packages/tokens/tokens.css
 apps/web/.svelte-kit/
 apps/web/.wrangler/
 apps/web/src/lib/paraglide/
-apps/web/project.inlang/cache/
+# inlang writes its own files next to settings.json
+apps/web/project.inlang/*
+!apps/web/project.inlang/settings.json
