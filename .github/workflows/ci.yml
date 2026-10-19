@@ -40,6 +40,12 @@ jobs:
       - name: Build
         run: pnpm --filter @prexorlabs/web build
 
+      # Performance at 0.95 rather than 1 because shared runners vary between runs. Largest contentful paint may
+      # take up to 2 s under Lighthouse's throttled phone profile (slow 4G); Google counts up to 2.5 s as good.
+      # The weight budget of 100 KB and the other three categories are strict.
+      - name: Lighthouse
+        run: pnpm dlx @lhci/cli@0.15.1 autorun
+
       # A preview version of the Worker per pull request, at pr-<number>-prexorlabs-web.<account>.workers.dev.
       # Pull requests from forks get no secrets and skip this step.
       - name: Preview deploy

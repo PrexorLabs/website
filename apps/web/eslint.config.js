@@ -17,9 +17,9 @@ export default ts.config(
   },
   {
     rules: {
-      // Links go through Paraglide's localizeHref, which already returns the final path with the /de prefix;
-      // resolve() only knows the route ids without it.
-      'svelte/no-navigation-without-resolve': ['error', { ignoreLinks: true }],
+      // Links and goto() go through Paraglide's localizeHref, which already returns the final path with the /de
+      // prefix; resolve() only knows the route ids without it.
+      'svelte/no-navigation-without-resolve': ['error', { ignoreLinks: true, ignoreGoto: true }],
     },
   },
 );

@@ -1,0 +1,93 @@
+# The items in the inventory on the home page, in slot order. A locked experiment becomes visible by giving it a name,
+# a description and `locked: false`; the lab feed then announces it.
+#
+# kind decides the color: project (lime), support (cyan), community (white), experiment (grey while locked).
+# stats with a `feed` value are filled from the lab feed at build time; `value` is shown as written.
+
+- id: serverlistplus
+  kind: project
+  icon: serverList
+  name: ServerListPlus
+  lore:
+    en: Experiment 001 · in review on Modrinth
+    de: Experiment 001 · in Prüfung bei Modrinth
+  description:
+    en: A Fabric mod that makes the multiplayer list searchable, groups your servers and keeps them in order.
+    de: Ein Fabric-Mod, der die Serverliste durchsuchbar macht, in Gruppen ordnet und aufgeräumt hält.
+  stats:
+    - label: { en: type, de: Art }
+      value: { en: Fabric mod, client side, de: Fabric-Mod, Client }
+    - label: { en: version, de: Version }
+      feed: version
+    - label: { en: downloads, de: Downloads }
+      feed: downloads
+  links:
+    - label: { en: View project, de: Zum Projekt }
+      href: /serverlistplus/
+      primary: true
+    - label: { en: Modrinth, de: Modrinth }
+      href: https://modrinth.com/mod/server-list-plus
+
+- id: donate
+  kind: support
+  icon: heart
+  name: { en: Donation, de: Spende }
+  lore:
+    en: Ingredient for every project
+    de: Zutat für jedes Projekt
+  description:
+    en: Keeps every project free and without ads. Pays for the domain and the time each new Minecraft version takes.
+    de: Hält alle Projekte kostenlos und ohne Werbung. Bezahlt die Domain und die Zeit, die jede neue Minecraft-Version kostet.
+  stats:
+    - label: { en: next goal, de: nächstes Ziel }
+      feed: goal
+  links:
+    - label: { en: Donate, de: Spenden }
+      href: /donate/
+      primary: true
+
+- id: discord
+  kind: community
+  icon: discord
+  name: Discord
+  lore:
+    en: Roadmap, ideas and support
+    de: Roadmap, Ideen und Hilfe
+  description:
+    en: Where the roadmap lives, ideas get discussed and bugs get reported.
+    de: Hier liegt die Roadmap, hier werden Ideen besprochen und Fehler gemeldet.
+  stats:
+    - label: { en: channels, de: Kanäle }
+      value: { en: '#announcements · #ideas · #support', de: '#announcements · #ideas · #support' }
+  links:
+    - label: { en: Join the Discord, de: Discord beitreten }
+      href: /discord
+      primary: true
+
+- id: github
+  kind: community
+  icon: github
+  name: GitHub
+  lore:
+    en: Source code and issues
+    de: Quellcode und Issues
+  description:
+    en: Read the code, open an issue or send a pull request.
+    de: Code lesen, Fehler melden oder einen Pull Request schicken.
+  stats:
+    - label: { en: organisation, de: Organisation }
+      value: { en: PrexorLabs, de: PrexorLabs }
+  links:
+    - label: { en: Open GitHub, de: GitHub öffnen }
+      href: /github
+      primary: true
+
+- id: exp-002
+  kind: experiment
+  locked: true
+  status: { en: in progress, de: in Arbeit }
+
+- id: exp-003
+  kind: experiment
+  locked: true
+  status: { en: planned, de: geplant }

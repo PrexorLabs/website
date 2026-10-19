@@ -1,17 +1,36 @@
 <script lang="ts">
   import '@prexorlabs/tokens/tokens.css';
   import '#lib/ui/fonts.css';
+  import { onNavigate } from '$app/navigation';
+  import { page } from '$app/state';
+  import Footer from '#lib/site/Footer.svelte';
+  import Header from '#lib/site/Header.svelte';
   import { m } from '#lib/paraglide/messages.js';
   import type { LayoutProps } from './$types';
 
   let { children }: LayoutProps = $props();
+
+  // Cross-fades between pages where the browser supports it; elsewhere the router swaps them without one.
+  onNavigate((navigation) => {
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    return new Promise((resolve) => {
+      document.startViewTransition(async () => {
+        resolve();
+        await navigation.complete;
+      });
+    });
+  });
 </script>
 
 <svelte:head>
   <meta name="description" content={m.site_description()} />
 </svelte:head>
 
-{@render children()}
+<Header namespace={page.data.namespace} />
+<main>
+  {@render children()}
+</main>
+<Footer />
 
 <style>
   :global(body) {
@@ -30,5 +49,9 @@
 
   :global(a) {
     color: inherit;
+  }
+
+  main {
+    min-height: calc(100vh - 77px);
   }
 </style>
