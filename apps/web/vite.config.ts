@@ -17,6 +17,13 @@ export default defineConfig({
         runes: ({ filename }) => (filename.split(/[/\\]/).includes('node_modules') ? undefined : true),
       },
       adapter: adapter(),
+      prerender: {
+        // Short links and feeds are answered by static/_redirects and the lab feed Worker, not by a page here.
+        handleHttpError: ({ path, message }) => {
+          if (['/discord', '/github', '/modrinth', '/lab.xml', '/lab.json'].includes(path)) return;
+          throw new Error(message);
+        },
+      },
     }),
   ],
 });
