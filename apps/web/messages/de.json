@@ -41,10 +41,6 @@
   "lab_all": "Alle Einträge",
   "lab_empty": "Der Lab-Feed beginnt mit dem nächsten Release.",
   "lab_commands": "Befehle",
-  "lab_release": "{project} {version} ist auf {platform} erschienen.",
-  "lab_idea": "Geplant: {title}",
-  "lab_goal": "Spendenziel erreicht: {goal}. Danke.",
-  "lab_unlocked": "Neu im Inventar: {project}.",
   "in_the_lab_title": "Noch im Labor.",
   "in_the_lab_text": "An dieser Seite wird noch gebaut. Bis dahin liegt alles im Inventar auf der Startseite.",
   "in_the_lab_back": "Zurück zum Inventar"

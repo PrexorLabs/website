@@ -1,0 +1,30 @@
+{
+  "name": "@prexorlabs/lab-feed",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler d1 migrations apply LAB --remote && wrangler deploy",
+    "check": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "token": "node scripts/create-token.mjs"
+  },
+  "dependencies": {
+    "@prexorlabs/lab": "workspace:*",
+    "valibot": "^1.5.0",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "^1.4.0",
+    "@cloudflare/workers-types": "^5.20261018.1",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.0",
+    "globals": "^17.13.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.2",
+    "vitest": "^4.1.12",
+    "wrangler": "^4.151.1"
+  }
+}

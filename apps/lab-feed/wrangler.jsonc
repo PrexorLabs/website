@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "prexorlabs-lab-feed",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-12",
+  "observability": { "enabled": true },
+  "d1_databases": [{ "binding": "LAB", "database_name": "lab", "database_id": "45de0867-fe8f-4794-930f-8d941a699f77" }],
+  // Modrinth has no webhooks, so new versions are picked up by asking every ten minutes.
+  "triggers": { "crons": ["*/10 * * * *"] },
+  // The inventory file from content/ is bundled as text and parsed at startup.
+  "rules": [{ "type": "Text", "globs": ["**/*.yaml"], "fallthrough": true }],
+  "vars": { "SITE_URL": "https://prexorlabs.dev" },
+}

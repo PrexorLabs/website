@@ -1,5 +1,6 @@
 import { parse } from 'yaml';
 import source from '../../../../../content/inventory.yaml?raw';
+import type { ProjectStats } from '@prexorlabs/lab';
 import type { InventoryItem, ItemKind } from '#lib/inventory.js';
 import type { IconName } from '#lib/ui/icons.js';
 import { m } from '#lib/paraglide/messages.js';
@@ -21,10 +22,11 @@ type Entry = {
 };
 
 /** Values the lab feed knows about a project; until a value is known its row is left out. */
-export type FeedStat = 'version' | 'downloads' | 'goal';
+type FeedStat = 'version' | 'downloads' | 'goal';
 
-export function loadInventory(feed: Partial<Record<FeedStat, string>> = {}): InventoryItem[] {
+export function loadInventory(stats: ProjectStats[]): InventoryItem[] {
   const locale = getLocale();
+  const numbers = new Intl.NumberFormat(locale);
   const pick = (text: string | Localized) => (typeof text === 'string' ? text : text[locale]);
 
   return (parse(source) as Entry[]).map((entry) => {
@@ -44,6 +46,11 @@ export function loadInventory(feed: Partial<Record<FeedStat, string>> = {}): Inv
         links: [{ label: m.experiment_link(), href: '/discord', primary: false }],
       };
     }
+    const known = stats.find((project) => project.project === entry.id);
+    const feed: Partial<Record<FeedStat, string>> = {
+      version: known?.version ?? undefined,
+      downloads: typeof known?.downloads === 'number' ? numbers.format(known.downloads) : undefined,
+    };
     return {
       id: entry.id,
       namespaced: `prexorlabs:${entry.id}`,

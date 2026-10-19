@@ -8,6 +8,9 @@ feed of releases and announcements from the lab. Decisions are recorded in [docs
 | Path               | What                                                                                     |
 | ------------------ | ---------------------------------------------------------------------------------------- |
 | `apps/web/`        | the site: SvelteKit, prerendered and served by a Cloudflare Worker; texts in `messages/` |
+| `apps/lab-feed/`   | the Worker that collects releases and posts into D1 and serves them as JSON and feeds    |
+| `packages/lab/`    | the event types and the sentences for them, shared by the site and the feed              |
+| `content/`         | `inventory.yaml`: the items on the home page and where each project publishes releases   |
 | `packages/tokens/` | colors and sizes as CSS variables, a copy of the Prexor design tokens (`tokens.json`)    |
 | `docs/adr/`        | architecture decision records                                                            |
 
@@ -22,6 +25,7 @@ feed of releases and announcements from the lab. Decisions are recorded in [docs
 pnpm install
 just dev      # the site with hot reload on http://localhost:5173
 just preview  # the built site in the local Workers runtime
+just feed     # the lab feed Worker with a local database
 just check    # everything CI checks
 just format   # format all code
 ```
