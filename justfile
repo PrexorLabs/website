@@ -7,6 +7,11 @@ default:
 dev:
     pnpm --filter @prexorlabs/web dev
 
+# Run the lab feed Worker locally with a local database
+feed:
+    pnpm --filter @prexorlabs/lab-feed exec wrangler d1 migrations apply LAB --local
+    pnpm --filter @prexorlabs/lab-feed dev
+
 # Build the site and serve it from the local Workers runtime, as it runs in production
 preview:
     pnpm --filter @prexorlabs/web preview
@@ -17,6 +22,9 @@ check:
     pnpm format:check
     pnpm --filter @prexorlabs/web lint
     pnpm --filter @prexorlabs/web check
+    pnpm --filter @prexorlabs/lab-feed lint
+    pnpm --filter @prexorlabs/lab-feed check
+    pnpm --filter @prexorlabs/lab-feed test
     pnpm --filter @prexorlabs/web build
 
 # Format all code

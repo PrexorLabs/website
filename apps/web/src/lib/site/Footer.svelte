@@ -1,6 +1,6 @@
 <script lang="ts">
   import { m } from '#lib/paraglide/messages.js';
-  import { localizeHref } from '#lib/paraglide/runtime.js';
+  import { getLocale, localizeHref } from '#lib/paraglide/runtime.js';
 </script>
 
 <footer>
@@ -13,7 +13,7 @@
     <nav aria-label={m.footer_label()}>
       <a href={localizeHref('/legal/imprint/')}>{m.footer_imprint()}</a>
       <a href={localizeHref('/legal/privacy/')}>{m.footer_privacy()}</a>
-      <a href="/lab.xml">RSS</a>
+      <a href={getLocale() === 'de' ? '/lab.xml?lang=de' : '/lab.xml'}>RSS</a>
       <a href="/github">GitHub</a>
       <a href="/discord">Discord</a>
       <a href="mailto:contact@prexorlabs.dev">contact@prexorlabs.dev</a>

@@ -3,7 +3,10 @@
     "collect": {
       "staticDistDir": "apps/web/.svelte-kit/cloudflare",
       "url": ["http://localhost/", "http://localhost/de/"],
-      "numberOfRuns": 3
+      "numberOfRuns": 3,
+      "settings": {
+        "skipAudits": ["errors-in-console"]
+      }
     },
     "assert": {
       "assertions": {

@@ -1,12 +1,22 @@
 <script lang="ts">
-  import type { LabEvent } from '@prexorlabs/lab';
+  import { describe, type LabEvent } from '@prexorlabs/lab';
+  import { onMount } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { getLocale, localizeHref } from '#lib/paraglide/runtime.js';
 
   let { events, projects }: { events: LabEvent[]; projects: Record<string, string> } = $props();
 
-  const platforms = { modrinth: 'Modrinth', curseforge: 'CurseForge', github: 'GitHub' };
-  const date = $derived(new Intl.DateTimeFormat(getLocale(), { day: 'numeric', month: 'short', year: 'numeric' }));
+  let fresh = $state<LabEvent[] | null>(null);
+  const shown = $derived(fresh ?? events);
+  const locale = $derived(getLocale());
+  const date = $derived(new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' }));
+
+  // The page was built with the entries of that moment; anything newer is fetched once it is open. If the feed cannot
+  // be reached, the built entries are still true, just not the newest, so there is nothing to show the reader.
+  onMount(async () => {
+    const response = await fetch(`/api/lab/v1/events?limit=${events.length || 6}`).catch(() => null);
+    if (response?.ok) fresh = (await response.json()).events;
+  });
 
   function sender(event: LabEvent) {
     if (event.kind === 'release') return { name: 'PrexorLabs', tone: 'release' };
@@ -14,36 +24,16 @@
     if (event.kind === 'goal') return { name: 'Donate', tone: 'community' };
     return { name: 'Lab', tone: 'lab' };
   }
-
-  function line(event: LabEvent) {
-    const project = (event.project && projects[event.project]) ?? event.project ?? '';
-    switch (event.kind) {
-      case 'release':
-        return m.lab_release({
-          project,
-          version: event.data.version ?? '',
-          platform: platforms[event.data.platform ?? 'modrinth'],
-        });
-      case 'idea':
-        return m.lab_idea({ title: event.data.title ?? '' });
-      case 'goal':
-        return m.lab_goal({ goal: event.data.goal ?? '' });
-      case 'unlocked':
-        return m.lab_unlocked({ project });
-      case 'post':
-      case 'teaser':
-        return event.text?.[getLocale()] ?? '';
-    }
-  }
 </script>
 
 <div class="chat">
-  {#each events as event (event.id)}
+  {#each shown as event (event.id)}
     {@const from = sender(event)}
+    {@const text = describe(event, locale, (event.project && projects[event.project]) || (event.project ?? ''))}
     <p>
       <time datetime={event.occurredAt}>{date.format(new Date(event.occurredAt))}</time>
       <span class={from.tone}>[{from.name}]</span>
-      {#if event.data.url}<a href={event.data.url}>{line(event)}</a>{:else}{line(event)}{/if}
+      {#if event.data.url}<a href={event.data.url}>{text}</a>{:else}{text}{/if}
     </p>
   {:else}
     <p class="empty">{m.lab_empty()}</p>

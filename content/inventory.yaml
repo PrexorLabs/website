@@ -3,11 +3,14 @@
 #
 # kind decides the color: project (lime), support (cyan), community (white), experiment (grey while locked).
 # stats with a `feed` value are filled from the lab feed at build time; `value` is shown as written.
+# A project's `modrinth` slug and `github` repository tell the lab feed where its releases come from.
 
 - id: serverlistplus
   kind: project
   icon: serverList
   name: ServerListPlus
+  modrinth: server-list-plus
+  github: PrexorLabs/ServerListPlus
   lore:
     en: Experiment 001 · in review on Modrinth
     de: Experiment 001 · in Prüfung bei Modrinth

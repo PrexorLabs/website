@@ -16,3 +16,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Short links `/discord`, `/github` and `/modrinth`.
 - Geist and Geist Mono cut to the characters and weights in use (51 KB to 31 KB).
 - Lighthouse check in CI with a budget of 100 KB per page.
+- The lab chat shows real entries from the lab feed and refreshes them in the browser; `/lab.xml` and `/lab.json`
+  serve the feed in English or German (`?lang=de`).

@@ -41,10 +41,6 @@
   "lab_all": "All entries",
   "lab_empty": "The lab feed starts with the next release.",
   "lab_commands": "Commands",
-  "lab_release": "{project} {version} is out on {platform}.",
-  "lab_idea": "Planned: {title}",
-  "lab_goal": "Donation goal reached: {goal}. Thank you.",
-  "lab_unlocked": "New in the inventory: {project}.",
   "in_the_lab_title": "Still in the lab.",
   "in_the_lab_text": "This page is being built. Until then, everything is in the inventory on the home page.",
   "in_the_lab_back": "Back to the inventory"
