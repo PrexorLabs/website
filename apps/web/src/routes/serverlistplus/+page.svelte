@@ -89,9 +89,7 @@
   <div class="grid">
     {#each shots as shot (shot.file)}
       <img
-        src="/images/serverlistplus/{shot.file}-1280.avif"
-        srcset="/images/serverlistplus/{shot.file}-640.avif 640w, /images/serverlistplus/{shot.file}-1280.avif 1280w"
-        sizes="(max-width: 720px) 100vw, 800px"
+        src="/images/serverlistplus/{shot.file}.avif"
         width="1280"
         height="720"
         loading="lazy"
@@ -335,7 +333,6 @@
     border-radius: 12px;
     background: var(--color-surface-1);
     box-shadow: inset 0 0 0 1px var(--color-line);
-    image-rendering: pixelated;
   }
 
   .grid img:first-child {
