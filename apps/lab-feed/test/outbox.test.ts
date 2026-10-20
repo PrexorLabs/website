@@ -31,7 +31,11 @@ function post() {
 }
 
 function outbox() {
-  return env.LAB.prepare('SELECT * FROM outbox').first<{ message_id: string; synced: number; attempts: number }>();
+  return env.LAB.prepare("SELECT * FROM outbox WHERE target = 'announcements'").first<{
+    message_id: string;
+    synced: number;
+    attempts: number;
+  }>();
 }
 
 afterEach(() => {

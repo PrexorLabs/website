@@ -31,22 +31,25 @@ export function fromRow(row: EventRow): LabEvent {
 // Modrinth, and is not announced again.
 const NEWS_WINDOW_MS = 2 * 24 * 60 * 60 * 1000;
 
-/** The Discord channels an event is posted to. Ideas come from Discord, so they are not posted back. */
-function discordTargets(event: NewEvent): string[] {
+/**
+ * Where an event goes besides the database: open pages of the site, and the Discord channels it is posted to. Ideas
+ * come from Discord, so they are not posted back.
+ */
+function outboxTargets(event: NewEvent): string[] {
   switch (event.kind) {
     case 'release':
       return event.project && Date.now() - Date.parse(event.occurredAt) < NEWS_WINDOW_MS
-        ? [`releases:${event.project}`]
-        : [];
+        ? ['site', `releases:${event.project}`]
+        : ['site'];
     case 'idea':
-      return [];
+      return ['site'];
     default:
-      return ['announcements'];
+      return ['site', 'announcements'];
   }
 }
 
 /**
- * Stores an event unless one with the same dedupe key exists, and queues it for Discord in the same batch; returns
+ * Stores an event unless one with the same dedupe key exists, and queues its delivery in the same batch; returns
  * it only when it is new.
  */
 export async function record(db: D1Database, event: NewEvent): Promise<LabEvent | null> {
@@ -70,7 +73,7 @@ export async function record(db: D1Database, event: NewEvent): Promise<LabEvent 
         event.text?.en ?? null,
         event.text?.de ?? null,
       ),
-    ...discordTargets(event).map((target) =>
+    ...outboxTargets(event).map((target) =>
       db
         .prepare(
           `INSERT INTO outbox (event_id, target, next_attempt_at)
@@ -140,7 +143,7 @@ export async function listEvents(
   return results.map(fromRow);
 }
 
-/** Changes an event and marks its Discord messages for an edit, or for deletion when it is hidden. */
+/** Changes an event and queues it again, so open pages and Discord show the change or drop the event. */
 export async function changeEvent(
   db: D1Database,
   id: string,

@@ -60,7 +60,7 @@ describe('GitHub webhook', () => {
 
   it('ignores a delivery it has seen before', async () => {
     await deliver(releasePayload(), 'delivery-3');
-    await env.LAB.prepare('DELETE FROM events').run();
+    await env.LAB.batch([env.LAB.prepare('DELETE FROM outbox'), env.LAB.prepare('DELETE FROM events')]);
     await deliver(releasePayload(), 'delivery-3');
     expect(await listEvents(env.LAB, { limit: 10 })).toHaveLength(0);
   });

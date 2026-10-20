@@ -1,4 +1,4 @@
-import { describe, type LabEvent } from '@prexorlabs/lab';
+import { describe, type LabEvent, type LabLiveMessage } from '@prexorlabs/lab';
 import type { DiscordConfig } from './discord';
 import { type EventRow, fromRow } from './events';
 import type { Env } from './index';
@@ -38,8 +38,19 @@ async function callWebhook(url: string, method: 'POST' | 'PATCH' | 'DELETE', bod
   return response;
 }
 
+async function showOnSite(env: Env, event: EventRow): Promise<null> {
+  const message: LabLiveMessage = event.hidden ? { hidden: event.id } : { event: fromRow(event) };
+  await env.LIVE.getByName('lab').broadcast(JSON.stringify(message));
+  return null;
+}
+
 /** Brings one Discord message in line with its event and returns the message id, or null once it is gone. */
-async function sync(env: Env, entry: OutboxRow, event: EventRow, webhook: string | undefined): Promise<string | null> {
+async function syncDiscord(
+  env: Env,
+  entry: OutboxRow,
+  event: EventRow,
+  webhook: string | undefined,
+): Promise<string | null> {
   if (!webhook) throw new Error(`No webhook for ${entry.target}`);
   if (event.hidden) {
     if (entry.message_id) await callWebhook(`${webhook}/messages/${entry.message_id}`, 'DELETE');
@@ -54,7 +65,10 @@ async function sync(env: Env, entry: OutboxRow, event: EventRow, webhook: string
   return (await sent.json<{ id: string }>()).id;
 }
 
-/** Posts, edits or deletes the Discord messages of new and changed events; failures wait twice as long each time. */
+/**
+ * Sends new and changed events to open pages and posts, edits or deletes their Discord messages; failures wait twice
+ * as long each time.
+ */
 export async function deliverDue(env: Env): Promise<void> {
   const now = Date.now();
   const lease = new Date(now + LEASE_MS).toISOString();
@@ -73,7 +87,10 @@ export async function deliverDue(env: Env): Promise<void> {
   for (const entry of due) {
     const event = await env.LAB.prepare('SELECT * FROM events WHERE id = ?').bind(entry.event_id).first<EventRow>();
     try {
-      const messageId = await sync(env, entry, event!, webhooks[entry.target]);
+      const messageId =
+        entry.target === 'site'
+          ? await showOnSite(env, event!)
+          : await syncDiscord(env, entry, event!, webhooks[entry.target]);
       // An edit that came in meanwhile moved next_attempt_at off the lease: the row stays unsynced and goes out again.
       await env.LAB.prepare(
         `UPDATE outbox SET message_id = ?3, synced = (next_attempt_at = ?4), last_error = NULL

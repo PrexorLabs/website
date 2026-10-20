@@ -29,6 +29,9 @@ export type LabEvent = {
   text: Localized | null;
 };
 
+/** What the lab feed sends to open pages when an event is new or changed, or when it was removed. */
+export type LabLiveMessage = { event: LabEvent } | { hidden: string };
+
 /** What the feed knows about a project, for the item's details on the home page. */
 export type ProjectStats = {
   project: string;

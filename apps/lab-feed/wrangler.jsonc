@@ -4,6 +4,9 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-10-12",
   "observability": { "enabled": true },
+  // One object named "lab" holds the WebSockets of open pages, see src/live.ts.
+  "durable_objects": { "bindings": [{ "name": "LIVE", "class_name": "LabLive" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["LabLive"] }],
   "d1_databases": [{ "binding": "LAB", "database_name": "lab", "database_id": "45de0867-fe8f-4794-930f-8d941a699f77" }],
   // Every minute the outbox retries Discord messages that failed. Modrinth has no webhooks, so new versions are
   // picked up by asking every ten minutes. The #ideas forums are read every hour.

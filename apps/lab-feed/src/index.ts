@@ -5,6 +5,7 @@ import { changeEvent, listEvents, listStats, record } from './events';
 import { atomFeed, jsonFeed } from './feeds';
 import { handleGitHub } from './github';
 import { pollIdeas } from './ideas';
+import type { LabLive } from './live';
 import { pollModrinth } from './modrinth';
 import { deliverDue } from './outbox';
 import { NewPost, PostChange } from './posts';
@@ -15,6 +16,7 @@ export type Env = {
   LAB: D1Database;
   GITHUB_WEBHOOK_SECRET: string;
   SITE_URL: string;
+  LIVE: DurableObjectNamespace<LabLive>;
   DISCORD: DiscordConfig;
   DISCORD_BOT_TOKEN: string;
   /** JSON object from outbox target (`announcements`, `releases:<project>`) to the channel's webhook URL. */
@@ -53,6 +55,11 @@ async function route(request: Request, env: Env): Promise<Response> {
       kind: url.searchParams.get('kind') ?? undefined,
     });
     return json({ events }, 200, true);
+  }
+
+  if (request.method === 'GET' && url.pathname === '/v1/live') {
+    if (request.headers.get('Upgrade') !== 'websocket') return json({ error: 'Expected a WebSocket' }, 426);
+    return env.LIVE.getByName('lab').fetch(request);
   }
 
   if (request.method === 'GET' && url.pathname === '/v1/projects') {
@@ -108,6 +115,8 @@ async function route(request: Request, env: Env): Promise<Response> {
 
   return json({ error: 'Not found' }, 404);
 }
+
+export { LabLive } from './live';
 
 export default {
   async fetch(request, env, context): Promise<Response> {

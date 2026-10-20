@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { describe, type LabEvent } from '@prexorlabs/lab';
+  import { describe, type LabEvent, type LabLiveMessage } from '@prexorlabs/lab';
   import { onMount } from 'svelte';
+  import { SvelteSet } from 'svelte/reactivity';
+  import { labFeedUrl } from '#lib/lab.js';
   import { m } from '#lib/paraglide/messages.js';
   import { getLocale, localizeHref } from '#lib/paraglide/runtime.js';
 
@@ -11,11 +13,52 @@
   const locale = $derived(getLocale());
   const date = $derived(new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' }));
 
-  // The page was built with the entries of that moment; anything newer is fetched once it is open. If the feed cannot
-  // be reached, the built entries are still true, just not the newest, so there is nothing to show the reader.
-  onMount(async () => {
-    const response = await fetch(`/api/lab/v1/events?limit=${events.length || 6}`).catch(() => null);
-    if (response?.ok) fresh = (await response.json()).events;
+  const arrived = new SvelteSet<string>();
+
+  // The page was built with the entries of that moment. Once it is open, it fetches what is newer and then listens for
+  // changes; after a dropped connection it fetches again for what it missed. If the feed cannot be reached, the built
+  // entries are still true, just not the newest, so there is nothing to show the reader.
+  onMount(() => {
+    const limit = events.length || 6;
+    let socket: WebSocket;
+    let retry: ReturnType<typeof setTimeout> | undefined;
+    let dropped = false;
+
+    async function refresh() {
+      const response = await fetch(`/api/lab/v1/events?limit=${limit}`, { cache: 'no-store' }).catch(() => null);
+      if (response?.ok) fresh = (await response.json()).events;
+    }
+
+    // A changed event takes the place of the shown one and a new one goes in by date; the log keeps its length.
+    function apply(message: LabLiveMessage) {
+      if ('hidden' in message) {
+        fresh = shown.filter((event) => event.id !== message.hidden);
+        return;
+      }
+      const rest = shown.filter((event) => event.id !== message.event.id);
+      if (rest.length === shown.length) arrived.add(message.event.id);
+      fresh = [message.event, ...rest].toSorted((a, b) => b.occurredAt.localeCompare(a.occurredAt)).slice(0, limit);
+    }
+
+    function listen() {
+      socket = new WebSocket(`${labFeedUrl.replace(/^http/, 'ws')}/v1/live`);
+      socket.onopen = () => {
+        if (dropped) refresh();
+      };
+      socket.onmessage = ({ data }) => apply(JSON.parse(data));
+      socket.onclose = () => {
+        dropped = true;
+        retry = setTimeout(listen, 15_000);
+      };
+    }
+
+    refresh();
+    listen();
+    return () => {
+      clearTimeout(retry);
+      socket.onclose = null;
+      socket.close();
+    };
   });
 
   function sender(event: LabEvent) {
@@ -27,17 +70,19 @@
 </script>
 
 <div class="chat">
-  {#each shown as event (event.id)}
-    {@const from = sender(event)}
-    {@const text = describe(event, locale, (event.project && projects[event.project]) || (event.project ?? ''))}
-    <p>
-      <time datetime={event.occurredAt}>{date.format(new Date(event.occurredAt))}</time>
-      <span class={from.tone}>[{from.name}]</span>
-      {#if event.data.url}<a href={event.data.url}>{text}</a>{:else}{text}{/if}
-    </p>
-  {:else}
-    <p class="empty">{m.lab_empty()}</p>
-  {/each}
+  <div class="log" role="log">
+    {#each shown as event (event.id)}
+      {@const from = sender(event)}
+      {@const text = describe(event, locale, (event.project && projects[event.project]) || (event.project ?? ''))}
+      <p class:arrived={arrived.has(event.id)}>
+        <time datetime={event.occurredAt}>{date.format(new Date(event.occurredAt))}</time>
+        <span class={from.tone}>[{from.name}]</span>
+        {#if event.data.url}<a href={event.data.url}>{text}</a>{:else}{text}{/if}
+      </p>
+    {:else}
+      <p class="empty">{m.lab_empty()}</p>
+    {/each}
+  </div>
 
   <div class="input" aria-hidden="true">
     <span class="prompt">&gt;</span><span class="typed">/donate</span><span class="caret"></span>
@@ -65,8 +110,18 @@
     overflow-wrap: anywhere;
   }
 
+  .log {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
   p {
     margin: 0;
+  }
+
+  .arrived {
+    animation: arrive 3s ease-out;
   }
 
   time,
@@ -164,6 +219,12 @@
     }
   }
 
+  @keyframes arrive {
+    from {
+      background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+    }
+  }
+
   @keyframes blink {
     50% {
       opacity: 0;
@@ -172,7 +233,8 @@
 
   @media (prefers-reduced-motion: reduce) {
     .typed,
-    .caret {
+    .caret,
+    .arrived {
       animation: none;
     }
   }
