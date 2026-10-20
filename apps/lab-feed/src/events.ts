@@ -1,7 +1,7 @@
 import type { LabEvent, LabEventKind, LabEventSource, Localized, Platform, ProjectStats } from '@prexorlabs/lab';
 import { ulid } from './ulid';
 
-type EventRow = {
+export type EventRow = {
   id: string;
   kind: LabEventKind;
   project: string | null;
@@ -10,11 +10,12 @@ type EventRow = {
   data: string;
   text_en: string | null;
   text_de: string | null;
+  hidden: number;
 };
 
 type NewEvent = Omit<LabEvent, 'id'> & { dedupeKey: string };
 
-function fromRow(row: EventRow): LabEvent {
+export function fromRow(row: EventRow): LabEvent {
   return {
     id: row.id,
     kind: row.kind,
@@ -26,28 +27,60 @@ function fromRow(row: EventRow): LabEvent {
   };
 }
 
-/** Stores an event unless one with the same dedupe key exists; returns it only when it is new. */
+// A release older than this is the poll catching up on history, for example when a project first goes public on
+// Modrinth, and is not announced again.
+const NEWS_WINDOW_MS = 2 * 24 * 60 * 60 * 1000;
+
+/** The Discord channels an event is posted to. Ideas come from Discord, so they are not posted back. */
+function discordTargets(event: NewEvent): string[] {
+  switch (event.kind) {
+    case 'release':
+      return event.project && Date.now() - Date.parse(event.occurredAt) < NEWS_WINDOW_MS
+        ? [`releases:${event.project}`]
+        : [];
+    case 'idea':
+      return [];
+    default:
+      return ['announcements'];
+  }
+}
+
+/**
+ * Stores an event unless one with the same dedupe key exists, and queues it for Discord in the same batch; returns
+ * it only when it is new.
+ */
 export async function record(db: D1Database, event: NewEvent): Promise<LabEvent | null> {
-  const row = await db
-    .prepare(
-      `INSERT INTO events (id, kind, project, source, occurred_at, dedupe_key, data, text_en, text_de)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-       ON CONFLICT (dedupe_key) DO NOTHING
-       RETURNING *`,
-    )
-    .bind(
-      ulid(),
-      event.kind,
-      event.project,
-      event.source,
-      event.occurredAt,
-      event.dedupeKey,
-      JSON.stringify(event.data),
-      event.text?.en ?? null,
-      event.text?.de ?? null,
-    )
-    .first<EventRow>();
-  return row && fromRow(row);
+  const id = ulid();
+  const [inserted] = await db.batch<EventRow>([
+    db
+      .prepare(
+        `INSERT INTO events (id, kind, project, source, occurred_at, dedupe_key, data, text_en, text_de)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+         ON CONFLICT (dedupe_key) DO NOTHING
+         RETURNING *`,
+      )
+      .bind(
+        id,
+        event.kind,
+        event.project,
+        event.source,
+        event.occurredAt,
+        event.dedupeKey,
+        JSON.stringify(event.data),
+        event.text?.en ?? null,
+        event.text?.de ?? null,
+      ),
+    ...discordTargets(event).map((target) =>
+      db
+        .prepare(
+          `INSERT INTO outbox (event_id, target, next_attempt_at)
+           SELECT ?1, ?2, ?3 WHERE EXISTS (SELECT 1 FROM events WHERE id = ?1)`,
+        )
+        .bind(id, target, new Date().toISOString()),
+    ),
+  ]);
+  const row = inserted.results[0];
+  return row ? fromRow(row) : null;
 }
 
 // One release shows up on several platforms, often with the loader or build in the version (1.4.0-fabric,
@@ -83,6 +116,11 @@ export function recordRelease(
   });
 }
 
+export async function findEvent(db: D1Database, id: string): Promise<LabEvent | null> {
+  const row = await db.prepare('SELECT * FROM events WHERE id = ? AND hidden = 0').bind(id).first<EventRow>();
+  return row && fromRow(row);
+}
+
 export async function listEvents(
   db: D1Database,
   filter: { limit: number; before?: string; project?: string; kind?: string },
@@ -102,26 +140,34 @@ export async function listEvents(
   return results.map(fromRow);
 }
 
+/** Changes an event and marks its Discord messages for an edit, or for deletion when it is hidden. */
 export async function changeEvent(
   db: D1Database,
   id: string,
   change: { text?: Localized; hidden?: boolean },
 ): Promise<LabEvent | null> {
-  const row = await db
-    .prepare(
-      `UPDATE events
-       SET text_en = coalesce(?2, text_en), text_de = coalesce(?3, text_de), hidden = coalesce(?4, hidden)
-       WHERE id = ?1
-       RETURNING *`,
-    )
-    .bind(
-      id,
-      change.text?.en ?? null,
-      change.text?.de ?? null,
-      change.hidden === undefined ? null : Number(change.hidden),
-    )
-    .first<EventRow>();
-  return row && fromRow(row);
+  const [updated] = await db.batch<EventRow>([
+    db
+      .prepare(
+        `UPDATE events
+         SET text_en = coalesce(?2, text_en), text_de = coalesce(?3, text_de), hidden = coalesce(?4, hidden)
+         WHERE id = ?1
+         RETURNING *`,
+      )
+      .bind(
+        id,
+        change.text?.en ?? null,
+        change.text?.de ?? null,
+        change.hidden === undefined ? null : Number(change.hidden),
+      ),
+    db
+      .prepare(
+        `UPDATE outbox SET synced = 0, attempts = 0, next_attempt_at = ?2, last_error = NULL WHERE event_id = ?1`,
+      )
+      .bind(id, new Date().toISOString()),
+  ]);
+  const row = updated.results[0];
+  return row ? fromRow(row) : null;
 }
 
 export async function saveStats(db: D1Database, stats: Omit<ProjectStats, 'updatedAt'>): Promise<void> {

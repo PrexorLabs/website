@@ -5,6 +5,7 @@ declare global {
   namespace Cloudflare {
     interface Env extends WorkerEnv {
       MIGRATIONS: D1Migration[];
+      TEST_DISCORD_PRIVATE_KEY: string;
     }
   }
 }
