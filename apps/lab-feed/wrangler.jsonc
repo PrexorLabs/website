@@ -5,9 +5,26 @@
   "compatibility_date": "2026-10-12",
   "observability": { "enabled": true },
   "d1_databases": [{ "binding": "LAB", "database_name": "lab", "database_id": "45de0867-fe8f-4794-930f-8d941a699f77" }],
-  // Modrinth has no webhooks, so new versions are picked up by asking every ten minutes.
-  "triggers": { "crons": ["*/10 * * * *"] },
+  // Every minute the outbox retries Discord messages that failed. Modrinth has no webhooks, so new versions are
+  // picked up by asking every ten minutes. The #ideas forums are read every hour.
+  "triggers": { "crons": ["* * * * *", "*/10 * * * *", "0 * * * *"] },
   // The inventory file from content/ is bundled as text and parsed at startup.
   "rules": [{ "type": "Text", "globs": ["**/*.yaml"], "fallthrough": true }],
-  "vars": { "SITE_URL": "https://prexorlabs.dev" },
+  // Secrets, set with `wrangler secret put`: GITHUB_WEBHOOK_SECRET, DISCORD_BOT_TOKEN, DISCORD_WEBHOOKS.
+  "vars": {
+    "SITE_URL": "https://prexorlabs.dev",
+    "DISCORD": {
+      "guild": "1560743493058568353",
+      // The application "Prexor"; its public key checks the signature of /lab interactions.
+      "publicKey": "1cadc4c8b790651dfd80995346957c96aeb31ada9bcc0b1986c98a647f17854c",
+      // Founder and Admin, the roles that may use /lab.
+      "editors": ["1561299257649012770", "1561301081622052864"],
+      // News, pinged with announcements.
+      "news": "1561299267367477319",
+      // Per project: its #ideas forum and the Updates role pinged with releases.
+      "projects": {
+        "serverlistplus": { "ideas": "1561299291325071390", "updates": "1561299271444209755" },
+      },
+    },
+  },
 }

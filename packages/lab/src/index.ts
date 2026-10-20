@@ -22,6 +22,7 @@ export type LabEvent = {
     gameVersions?: string[];
     platform?: Platform;
     title?: string;
+    status?: 'planned' | 'done';
     goal?: string;
     url?: string;
   };
@@ -42,14 +43,14 @@ const platformNames: Record<Platform, string> = { modrinth: 'Modrinth', cursefor
 const sentences = {
   en: {
     release: (project: string, version: string, platform: string) => `${project} ${version} is out on ${platform}.`,
-    idea: (title: string) => `Planned: ${title}`,
+    idea: (title: string, done: boolean) => `${done ? 'Done' : 'Planned'}: ${title}`,
     goal: (goal: string) => `Donation goal reached: ${goal}. Thank you.`,
     unlocked: (project: string) => `New in the inventory: ${project}.`,
   },
   de: {
     release: (project: string, version: string, platform: string) =>
       `${project} ${version} ist auf ${platform} erschienen.`,
-    idea: (title: string) => `Geplant: ${title}`,
+    idea: (title: string, done: boolean) => `${done ? 'Erledigt' : 'Geplant'}: ${title}`,
     goal: (goal: string) => `Spendenziel erreicht: ${goal}. Danke.`,
     unlocked: (project: string) => `Neu im Inventar: ${project}.`,
   },
@@ -61,7 +62,7 @@ export function describe(event: LabEvent, locale: Locale, projectName: string): 
     case 'release':
       return say.release(projectName, event.data.version ?? '', platformNames[event.data.platform ?? 'modrinth']);
     case 'idea':
-      return say.idea(event.data.title ?? '');
+      return say.idea(event.data.title ?? '', event.data.status === 'done');
     case 'goal':
       return say.goal(event.data.goal ?? '');
     case 'unlocked':

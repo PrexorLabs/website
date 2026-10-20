@@ -7,3 +7,4 @@ supersedes an old one.
 | --- | --- |
 | 0001 | [SvelteKit on Cloudflare Workers](0001-sveltekit-on-cloudflare-workers.md) |
 | 0002 | [A Worker collects the lab feed](0002-lab-feed-worker.md) |
+| 0003 | [Discord through an interactions endpoint and webhooks](0003-discord-interactions-and-webhooks.md) |

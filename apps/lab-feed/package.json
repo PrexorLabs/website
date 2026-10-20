@@ -9,7 +9,8 @@
     "check": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "token": "node scripts/create-token.mjs"
+    "token": "node scripts/create-token.mjs",
+    "commands": "node scripts/register-commands.mjs"
   },
   "dependencies": {
     "@prexorlabs/lab": "workspace:*",
