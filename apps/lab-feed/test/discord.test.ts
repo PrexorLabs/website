@@ -35,7 +35,7 @@ function form(customId: string, values: Record<string, string>) {
 }
 
 async function outbox() {
-  const { results } = await env.LAB.prepare('SELECT event_id, target, synced FROM outbox').all();
+  const { results } = await env.LAB.prepare('SELECT event_id, target, synced FROM outbox ORDER BY target').all();
   return results;
 }
 
@@ -81,7 +81,10 @@ describe('Discord interactions', () => {
     expect(events).toMatchObject([
       { kind: 'post', project: 'serverlistplus', source: 'discord', text: { en: 'Groups are coming.' } },
     ]);
-    expect(await outbox()).toMatchObject([{ event_id: events[0].id, target: 'announcements' }]);
+    expect(await outbox()).toMatchObject([
+      { event_id: events[0].id, target: 'announcements' },
+      { event_id: events[0].id, target: 'site' },
+    ]);
   });
 
   it('refuses /lab to members without an editor role', async () => {

@@ -15,4 +15,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `pnpm commands` registers them.
 - Posts, announcements and new releases go to #announcements and the project's releases channel through webhooks;
   edits and deletions follow, failures are retried with a growing pause.
+- `/v1/live`, a WebSocket that sends open pages every new, changed or removed event.
 - Ideas tagged Planned or Done in a project's #ideas forum, read every hour.

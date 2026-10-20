@@ -1,8 +1,5 @@
 import type { LabEvent, ProjectStats } from '@prexorlabs/lab';
-
-// The lab feed Worker's public address, read while the pages are built. In the browser the site reaches the same
-// Worker through /api/lab and the service binding in wrangler.jsonc.
-const labFeedUrl = 'https://prexorlabs-lab-feed.justin-666.workers.dev';
+import { labFeedUrl } from '#lib/lab.js';
 
 export async function loadLab(fetch: typeof globalThis.fetch, limit: number) {
   const [events, projects] = await Promise.all([
