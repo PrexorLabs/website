@@ -18,5 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Lighthouse check in CI with a budget of 100 KB per page.
 - The lab chat shows real entries from the lab feed and refreshes them in the browser; `/lab.xml` and `/lab.json`
   serve the feed in English or German (`?lang=de`).
+- ServerListPlus page: features, facts and versions from the lab feed, screenshots, the project's lab entries and a
+  donation call. The download button goes to GitHub until Modrinth has approved the mod.
 - The lab chat updates while the page is open: new entries appear with a short highlight, edits and deletions show
   right away.

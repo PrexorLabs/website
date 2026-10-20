@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "staticDistDir": "apps/web/.svelte-kit/cloudflare",
-      "url": ["http://localhost/", "http://localhost/de/"],
+      "url": ["http://localhost/", "http://localhost/de/", "http://localhost/serverlistplus/"],
       "numberOfRuns": 3,
       "settings": {
         "skipAudits": ["errors-in-console"]

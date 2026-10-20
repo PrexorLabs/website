@@ -1,8 +1,8 @@
 import { loadInventory } from '#lib/server/inventory.js';
-import { loadLab } from '#lib/server/lab.js';
+import { loadEvents, loadStats } from '#lib/server/lab.js';
 
 export const load = async ({ fetch }) => {
-  const { events, stats } = await loadLab(fetch, 6);
+  const [events, stats] = await Promise.all([loadEvents(fetch, { limit: 6 }), loadStats(fetch)]);
   const inventory = loadInventory(stats);
   return {
     namespace: 'prexorlabs:home',
