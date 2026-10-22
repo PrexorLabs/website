@@ -70,5 +70,19 @@
   "slp_versions_empty": "No release yet.",
   "slp_lab_title": "From the lab",
   "slp_donate_title": "Keep ServerListPlus up to date",
-  "slp_donate_text": "Every new Minecraft version means porting and testing. Donations pay for that time."
+  "slp_donate_text": "Every new Minecraft version means porting and testing. Donations pay for that time.",
+  "lab_page_before": "Latest from the ",
+  "lab_page_lab": "lab",
+  "lab_page_after": ".",
+  "lab_intro": "Releases, announcements and ideas from every PrexorLabs project, collected automatically.",
+  "lab_feeds_label": "Feeds",
+  "lab_filter_label": "Show",
+  "lab_filter_all": "All",
+  "lab_filter_release": "Releases",
+  "lab_filter_post": "Posts",
+  "lab_filter_idea": "Ideas",
+  "lab_filter_goal": "Goals",
+  "lab_none": "Nothing here yet.",
+  "lab_older": "Older entries",
+  "lab_unreachable": "The lab feed cannot be reached right now. Try again in a moment."
 }

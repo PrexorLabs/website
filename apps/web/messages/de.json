@@ -70,5 +70,19 @@
   "slp_versions_empty": "Noch keine Version.",
   "slp_lab_title": "Aus dem Labor",
   "slp_donate_title": "Halte ServerListPlus aktuell",
-  "slp_donate_text": "Jede neue Minecraft-Version heißt portieren und testen. Spenden bezahlen diese Zeit."
+  "slp_donate_text": "Jede neue Minecraft-Version heißt portieren und testen. Spenden bezahlen diese Zeit.",
+  "lab_page_before": "Neues aus dem ",
+  "lab_page_lab": "Labor",
+  "lab_page_after": ".",
+  "lab_intro": "Releases, Ankündigungen und Ideen aus allen Projekten von PrexorLabs, automatisch gesammelt.",
+  "lab_feeds_label": "Feeds",
+  "lab_filter_label": "Anzeigen",
+  "lab_filter_all": "Alle",
+  "lab_filter_release": "Releases",
+  "lab_filter_post": "Beiträge",
+  "lab_filter_idea": "Ideen",
+  "lab_filter_goal": "Ziele",
+  "lab_none": "Hier ist noch nichts.",
+  "lab_older": "Ältere Einträge",
+  "lab_unreachable": "Der Lab-Feed ist gerade nicht erreichbar. Versuch es gleich noch einmal."
 }

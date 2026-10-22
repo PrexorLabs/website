@@ -22,3 +22,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   donation call. The download button goes to GitHub until Modrinth has approved the mod.
 - The lab chat updates while the page is open: new entries appear with a short highlight, edits and deletions show
   right away.
+- Lab page with every entry of the lab feed by month, filters for releases, posts, ideas and goals, older entries
+  on demand and links to the Atom and JSON feeds.

@@ -2,7 +2,7 @@
   import { describe, type LabEvent, type LabLiveMessage } from '@prexorlabs/lab';
   import { onMount } from 'svelte';
   import { SvelteSet } from 'svelte/reactivity';
-  import { labFeedUrl } from '#lib/lab.js';
+  import { labFeedUrl, senderOf } from '#lib/lab.js';
   import { m } from '#lib/paraglide/messages.js';
   import { getLocale } from '#lib/paraglide/runtime.js';
 
@@ -64,18 +64,11 @@
       socket.close();
     };
   });
-
-  function sender(event: LabEvent) {
-    if (event.kind === 'release') return { name: 'PrexorLabs', tone: 'release' };
-    if (event.kind === 'idea') return { name: 'Ideas', tone: 'community' };
-    if (event.kind === 'goal') return { name: 'Donate', tone: 'community' };
-    return { name: 'Lab', tone: 'lab' };
-  }
 </script>
 
 <div class="log" role="log">
   {#each shown as event (event.id)}
-    {@const from = sender(event)}
+    {@const from = senderOf(event)}
     {@const text = describe(event, locale, (event.project && projects[event.project]) || (event.project ?? ''))}
     <p class:arrived={arrived.has(event.id)}>
       <time datetime={event.occurredAt}>{date.format(new Date(event.occurredAt))}</time>
