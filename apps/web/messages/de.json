@@ -84,5 +84,7 @@
   "lab_filter_goal": "Ziele",
   "lab_none": "Hier ist noch nichts.",
   "lab_older": "Ältere Einträge",
-  "lab_unreachable": "Der Lab-Feed ist gerade nicht erreichbar. Versuch es gleich noch einmal."
+  "lab_unreachable": "Der Lab-Feed ist gerade nicht erreichbar. Versuch es gleich noch einmal.",
+  "not_found_title": "Dieser Slot ist leer.",
+  "not_found_text": "Die Seite, die du suchst, liegt nicht im Inventar. Vielleicht ist sie umgezogen, vielleicht gab es sie nie."
 }

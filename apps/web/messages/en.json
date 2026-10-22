@@ -84,5 +84,7 @@
   "lab_filter_goal": "Goals",
   "lab_none": "Nothing here yet.",
   "lab_older": "Older entries",
-  "lab_unreachable": "The lab feed cannot be reached right now. Try again in a moment."
+  "lab_unreachable": "The lab feed cannot be reached right now. Try again in a moment.",
+  "not_found_title": "This slot is empty.",
+  "not_found_text": "The page you are looking for is not in the inventory. Maybe it moved, maybe it never existed."
 }

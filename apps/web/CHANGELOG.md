@@ -24,3 +24,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   right away.
 - Lab page with every entry of the lab feed by month, filters for releases, posts, ideas and goals, older entries
   on demand and links to the Atom and JSON feeds.
+- A 404 page: an empty slot with the way back to the inventory and the lab.
