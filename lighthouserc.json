@@ -2,13 +2,19 @@
   "ci": {
     "collect": {
       "staticDistDir": "apps/web/.svelte-kit/cloudflare",
-      "url": ["http://localhost/", "http://localhost/de/", "http://localhost/legal/privacy/"],
+      "url": [
+        "http://localhost/",
+        "http://localhost/de/",
+        "http://localhost/projects/",
+        "http://localhost/projects/serverlistplus/",
+        "http://localhost/legal/privacy/"
+      ],
       "numberOfRuns": 3
     },
     "assert": {
       "assertMatrix": [
         {
-          "matchingUrlPattern": "^http://localhost/(de/)?$",
+          "matchingUrlPattern": "^http://localhost/(de/)?(projects/(serverlistplus/)?)?$",
           "assertions": {
             "categories:performance": [
               "error",

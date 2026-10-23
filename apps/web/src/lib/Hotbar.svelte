@@ -16,7 +16,7 @@
     },
     {
       name: m.nav_projects(),
-      href: `${localizeHref('/')}#projects`,
+      href: localizeHref('/projects/'),
       icon: 'M2 3.5h4.5L8 5h6v8.5H2zM4.5 8h7M4.5 10.5h4.5',
       external: false,
     },
@@ -29,7 +29,8 @@
     },
   ]);
 
-  const onHome = $derived(deLocalizeHref(page.url.pathname) === '/');
+  const path = $derived(deLocalizeHref(page.url.pathname));
+  const currentSlot = $derived(path === '/' ? 0 : path.startsWith('/projects/') ? 1 : -1);
 
   // Number keys pick a slot, as in the game. Typing in a field or holding a modifier never triggers it.
   function pickSlot(event: KeyboardEvent) {
@@ -46,7 +47,7 @@
 
 <nav aria-label={m.nav_label()}>
   {#each slots as slot, index (slot.href)}
-    {@const current = index === 0 && onHome}
+    {@const current = index === currentSlot}
     <a href={slot.href} class={{ current }} aria-current={current ? 'page' : undefined} aria-label={slot.name}>
       <span class="key" aria-hidden="true">{index + 1}</span>
       <svg width="24" height="24" viewBox="0 0 16 16" aria-hidden="true"><path d={slot.icon} /></svg>
