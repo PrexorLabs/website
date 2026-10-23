@@ -1,10 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import Drawing, { type DrawingName } from '#lib/Drawing.svelte';
+  import { nextExperiment, serverListPlus as slp } from '#lib/projects.js';
   import { m } from '#lib/paraglide/messages.js';
-
-  const version = '1.2.0';
-  const repository = 'https://github.com/PrexorLabs/ServerListPlus';
+  import { localizeHref } from '#lib/paraglide/runtime.js';
 
   // Position in the hero, size in pixels, resting angle, and how far each drawing gives way to the pointer.
   // Small drawings move more than big ones, which reads as depth.
@@ -18,7 +17,7 @@
   ];
 
   const shots = $derived([
-    { src: '/images/serverlistplus/server-list.avif', alt: m.shot_list() },
+    { src: slp.screenshot, alt: m.shot_list() },
     { src: '/images/serverlistplus/search.avif', alt: m.shot_search() },
     { src: '/images/serverlistplus/settings.avif', alt: m.shot_settings() },
   ]);
@@ -68,7 +67,7 @@
   <p>{m.home_intro()}</p>
   <div class="actions">
     <a class="button" href="/discord">{m.home_discord()}</a>
-    <a class="link" href="#projects">{m.home_projects()}</a>
+    <a class="link" href={localizeHref('/projects/')}>{m.home_projects()}</a>
   </div>
 </section>
 
@@ -78,11 +77,12 @@
       <span class="inner">
         <span class="picture sketch"><Drawing name="flask" size={150} /></span>
         <span class="bar"
-          ><span class="pulse" aria-hidden="true"></span><span class="number">002</span>{m.fan_next()}</span
+          ><span class="pulse" aria-hidden="true"></span><span class="number">{nextExperiment.number}</span
+          >{m.fan_next()}</span
         >
       </span>
     </a>
-    <a class="card middle" href={repository}>
+    <a class="card middle" href={localizeHref(slp.path)}>
       <span class="inner">
         <span class="picture">
           {#each shots as shot, index (shot.src)}
@@ -97,9 +97,9 @@
           {/each}
         </span>
         <span class="bar">
-          <img class="icon" src="/images/serverlistplus/icon.avif" alt="" width="30" height="30" />
-          <strong>ServerListPlus</strong>
-          <span class="muted">{m.fan_latest({ version })}</span>
+          <img class="icon" src={slp.icon} alt="" width="30" height="30" />
+          <strong>{slp.name}</strong>
+          <span class="muted">{m.fan_latest({ version: slp.version })}</span>
         </span>
       </span>
     </a>
@@ -114,16 +114,16 @@
 
 <section id="projects" class="wrap projects" aria-labelledby="projects-title">
   <h2 id="projects-title" class="serif">{m.projects_title()}</h2>
-  <a class="row" href={repository}>
-    <img src="/images/serverlistplus/icon.avif" alt="" width="56" height="56" />
+  <a class="row" href={localizeHref(slp.path)}>
+    <img src={slp.icon} alt="" width="56" height="56" />
     <span class="text">
-      <span class="name serif">ServerListPlus</span>
+      <span class="name serif">{slp.name}</span>
       <span class="muted">{m.slp_text()}</span>
     </span>
-    <span class="side number">{version}</span>
+    <span class="side number">{slp.version}</span>
   </a>
   <div class="row">
-    <span class="placeholder number" aria-hidden="true">002</span>
+    <span class="placeholder number" aria-hidden="true">{nextExperiment.number}</span>
     <span class="text">
       <span class="name serif faint">{m.next_name()}</span>
       <span class="muted">{m.next_text()}</span>

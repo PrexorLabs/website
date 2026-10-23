@@ -1,7 +1,7 @@
 # prexorlabs.dev
 
-The website of PrexorLabs: a start page with the projects, the imprint and the privacy page, in English and German,
-with a light and a dark theme. Decisions are recorded in [docs/adr](docs/adr).
+The website of PrexorLabs: a start page, a page listing the projects and one page per project, the imprint and the
+privacy page, in English and German, with a light and a dark theme. Decisions are recorded in [docs/adr](docs/adr).
 
 ## Layout
 

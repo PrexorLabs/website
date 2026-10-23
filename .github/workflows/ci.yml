@@ -39,8 +39,8 @@ jobs:
 
       # Performance at 0.95 rather than 1 because shared runners vary between runs. Largest contentful paint may
       # take up to 2 s under Lighthouse's throttled phone profile (slow 4G); Google counts up to 2.5 s as good.
-      # The other three categories are strict. The start page shows three ServerListPlus screenshots in turn, so it
-      # gets 100 KB for images on top of the 100 KB every other page has.
+      # The other three categories are strict. Pages that show ServerListPlus screenshots (the start page and the
+      # projects pages) get 100 KB for images on top of the 100 KB every other page has.
       - name: Lighthouse
         run: pnpm dlx @lhci/cli@0.15.1 autorun
 
