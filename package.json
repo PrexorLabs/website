@@ -1,0 +1,13 @@
+{
+  "name": "prexorlabs-website",
+  "private": true,
+  "packageManager": "pnpm@12.14.0",
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10",
+    "prettier-plugin-svelte": "^4.1.1"
+  }
+}

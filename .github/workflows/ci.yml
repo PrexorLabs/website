@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Formatting
+        run: pnpm format:check
+
+      - name: Lints and type checks
+        run: |
+          pnpm --filter @prexorlabs/web lint
+          pnpm --filter @prexorlabs/web check
+
+      - name: Build
+        run: pnpm --filter @prexorlabs/web build
+
+      # Performance at 0.95 rather than 1 because shared runners vary between runs. Largest contentful paint may
+      # take up to 2 s under Lighthouse's throttled phone profile (slow 4G); Google counts up to 2.5 s as good.
+      # The other three categories are strict. The start page shows three ServerListPlus screenshots in turn, so it
+      # gets 100 KB for images on top of the 100 KB every other page has.
+      - name: Lighthouse
+        run: pnpm dlx @lhci/cli@0.15.1 autorun
+
+      # A preview version of the Worker per pull request, at pr-<number>-prexorlabs-web.<account>.workers.dev.
+      # Pull requests from forks get no secrets and skip this step.
+      - name: Preview deploy
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        working-directory: apps/web
+        run: pnpm exec wrangler versions upload --preview-alias pr-${{ github.event.pull_request.number }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Deploy the site
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: apps/web
+        run: pnpm exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
