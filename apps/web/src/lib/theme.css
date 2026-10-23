@@ -31,6 +31,8 @@
 
   --serif: 'Fraunces', Georgia, serif;
   --sans: 'Instrument Sans', system-ui, sans-serif;
+  /* Search terms and file names only; the system's own monospace is close enough to not need a third font file. */
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --width: 1240px;
   --gutter: 32px;
 }

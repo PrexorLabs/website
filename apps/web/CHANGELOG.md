@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Light and dark theme, following the system until a choice in the header; the choice is kept in the browser only.
 - The hotbar as main menu with Home, Projects, Discord and GitHub, number keys 1 to 4 as shortcuts.
 - Imprint and privacy page, and a 404 page in both languages.
+- Projects page with every project, and a page for ServerListPlus: a tour that zooms into the parts of the server
+  list one after another, the features, the search terms, installation, versions and what happens with your data.
 - Fraunces and Instrument Sans, cut to the characters and the one cut the site uses (148 KB to 43 KB).
 
 ### Removed
